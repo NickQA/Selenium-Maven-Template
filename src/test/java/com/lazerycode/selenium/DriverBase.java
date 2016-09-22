@@ -34,10 +34,10 @@ public class DriverBase {
         return driverFactory.get().getDriver();
     }
 
-    @AfterMethod(alwaysRun = true)
-    public static void clearCookies() throws Exception {
-        getDriver().manage().deleteAllCookies();
-    }
+//    @AfterMethod(alwaysRun = true)
+//    public static void clearCookies() throws Exception {
+//        getDriver().manage().deleteAllCookies();
+//    }
 
     @AfterSuite(alwaysRun = true)
     public static void closeDriverObjects() {
