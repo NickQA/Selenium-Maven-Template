@@ -1,22 +1,32 @@
 package com.lazerycode.selenium.pageObject;
 
 import com.lazerycode.selenium.DriverBase;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-/**
- * Created by Nick Chursin on 9/22/2016.
- */
+import java.util.List;
+
 public class BasePageMap {
-    protected WebDriver driver;
+    public WebDriver driver;
     public WebDriverWait wait;
 
     protected BasePageMap() {
         try {
             driver = DriverBase.getDriver();
-            wait = new WebDriverWait(driver, 10);
+            wait = DriverBase.getWait();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    protected WebElement findElement(By by){
+        return wait.until(ExpectedConditions.presenceOfElementLocated(by));
+    }
+
+    protected List<WebElement> findElements(By by){
+        return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(by));
     }
 }

@@ -1,5 +1,27 @@
-Selenium-Maven-Template
+Selenium-Maven-Template-PageObject
 =======================
+
+Forked from [Selenium-Maven-Template by Ardesco](https://github.com/Ardesco/Selenium-Maven-Template).
+
+### Page Object
+Tests looks like:
+```
+        GooglePage googlePage = new GooglePage();
+        googlePage.navigate();
+        googlePage.performSearch("Milk!");
+        googlePage.waitUntilResultsLoaded("Milk");
+        googlePage.getValidator().assertThatTitleContains("Milk");
+```
+
+#####Page object implementation:
+* Assertions methods for pages are located in Validator classes.
+* WebElements for pages are located in Map classes.
+* Pages behaviour described in Page classes.
+
+Modified tests could be fount at GoogleExamplePageObjectIT class.
+
+_P.S. Used selenium 3.0.0beta3 with Chrome because of unstable work with FF_
+### Original Description
 
 [![Join the chat at https://gitter.im/Ardesco/Selenium-Maven-Template](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Ardesco/Selenium-Maven-Template?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 

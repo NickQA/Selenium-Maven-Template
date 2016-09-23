@@ -3,6 +3,7 @@ package com.lazerycode.selenium;
 import com.lazerycode.selenium.config.DriverFactory;
 import com.lazerycode.selenium.listeners.ScreenshotListener;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
@@ -34,10 +35,14 @@ public class DriverBase {
         return driverFactory.get().getDriver();
     }
 
-//    @AfterMethod(alwaysRun = true)
-//    public static void clearCookies() throws Exception {
-//        getDriver().manage().deleteAllCookies();
-//    }
+    public static WebDriverWait getWait() throws Exception {
+        return driverFactory.get().getWait();
+    }
+
+    @AfterMethod(alwaysRun = true)
+    public static void clearCookies() throws Exception {
+        getDriver().manage().deleteAllCookies();
+    }
 
     @AfterSuite(alwaysRun = true)
     public static void closeDriverObjects() {

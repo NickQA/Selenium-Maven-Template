@@ -5,6 +5,7 @@ import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -16,6 +17,7 @@ import static org.openqa.selenium.Proxy.ProxyType.MANUAL;
 public class DriverFactory {
 
     private WebDriver webdriver;
+    private WebDriverWait webDriverWait;
     private DriverType selectedDriverType;
 
     private final DriverType defaultDriverType = FIREFOX;
@@ -43,6 +45,13 @@ public class DriverFactory {
         }
 
         return webdriver;
+    }
+
+    public WebDriverWait getWait() throws Exception {
+        if (null != webdriver && null == webDriverWait) {
+           webDriverWait = new WebDriverWait(webdriver, 10);
+        }
+        return webDriverWait;
     }
 
     public void quitDriver() {
