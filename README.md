@@ -6,11 +6,11 @@ Forked from [Selenium-Maven-Template by Ardesco](https://github.com/Ardesco/Sele
 ### Page Object
 Tests looks like:
 ```
-        GooglePage googlePage = new GooglePage();
-        googlePage.navigate();
-        googlePage.performSearch("Milk!");
-        googlePage.waitUntilResultsLoaded("Milk");
-        googlePage.getValidator().assertThatTitleContains("Milk");
+GooglePage googlePage = new GooglePage();
+googlePage.navigate();
+googlePage.performSearch("Milk!");
+googlePage.waitUntilResultsLoaded("Milk");
+googlePage.getValidator().assertThatTitleContains("Milk");
 ```
 
 #####Page object implementation:

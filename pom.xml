@@ -41,6 +41,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <selenium.version>3.0.0-beta3</selenium.version>
+        <cucumber.version>1.2.5</cucumber.version>
+        <java.version>1.8</java.version>
         <overwrite.binaries>false</overwrite.binaries>
         <browser>chrome</browser>
         <threads>1</threads>
@@ -83,6 +85,21 @@
             <version>6.9.10</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>${cucumber.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-testng</artifactId>
+            <version>${cucumber.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.masterthought</groupId>
+            <artifactId>maven-cucumber-reporting</artifactId>
+            <version>3.0.0</version>
+        </dependency>
     </dependencies>
 
     <profiles>
@@ -97,8 +114,8 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-compiler-plugin</artifactId>
                         <configuration>
-                            <source>1.7</source>
-                            <target>1.7</target>
+                            <source>${java.version}</source>
+                            <target>${java.version}</target>
                         </configuration>
                         <version>3.5.1</version>
                     </plugin>
@@ -127,6 +144,8 @@
                         <configuration>
                             <parallel>methods</parallel>
                             <threadCount>${threads}</threadCount>
+                            <testFailureIgnore>true</testFailureIgnore>
+
                             <systemPropertyVariables>
                                 <browser>${browser}</browser>
                                 <screenshotDirectory>${project.build.directory}/screenshots</screenshotDirectory>
@@ -151,9 +170,58 @@
                             <execution>
                                 <goals>
                                     <goal>integration-test</goal>
-                                    <!--This goal makes the build fail if you have test failures-->
                                     <goal>verify</goal>
                                 </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.github.temyers</groupId>
+                        <artifactId>cucumber-jvm-parallel-plugin</artifactId>
+                        <version>1.2.1</version>
+                        <executions>
+                            <execution>
+                                <id>generateRunners</id>
+                                <phase>generate-test-sources</phase>
+                                <goals>
+                                    <goal>generateRunners</goal>
+                                </goals>
+                                <configuration>
+                                    <glue>com.lazerycode.selenium.stepDef</glue>
+                                    <outputDirectory>${project.build.directory}/generated-test-sources/cucumber</outputDirectory>
+                                    <featuresDirectory>src/test/resources/features/</featuresDirectory>
+                                    <cucumberOutputDir>target/cucumber-parallel</cucumberOutputDir>
+                                    <format>json</format>
+                                    <strict>true</strict>
+                                    <monochrome>false</monochrome>
+                                    <!-- The tags to run, maps to CucumberOptions.tags property -->
+                                    <tags>"@SmokeTest"</tags>
+                                    <filterFeaturesByTags>false</filterFeaturesByTags>
+                                    <useTestNG>true</useTestNG>
+                                    <namingScheme>simple</namingScheme>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>net.masterthought</groupId>
+                        <artifactId>maven-cucumber-reporting</artifactId>
+                        <version>3.0.0</version>
+                        <executions>
+                            <execution>
+                                <id>execution</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
+                                <configuration>
+                                    <projectName>${name}</projectName>
+                                    <buildNumber>${version}</buildNumber>
+                                    <outputDirectory>${project.build.directory}/cucumber-html-reports</outputDirectory>
+                                    <cucumberOutput>target/cucumber-parallel</cucumberOutput>
+                                    <!--<cucumberOutput>${project.build.directory}/cucumber.json</cucumberOutput>-->
+                                    <parallelTesting>true</parallelTesting>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>

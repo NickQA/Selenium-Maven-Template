@@ -2,6 +2,7 @@ package com.lazerycode.selenium;
 
 import com.lazerycode.selenium.config.DriverFactory;
 import com.lazerycode.selenium.listeners.ScreenshotListener;
+import cucumber.api.testng.AbstractTestNGCucumberTests;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterMethod;
@@ -14,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Listeners(ScreenshotListener.class)
-public class DriverBase {
+public class DriverBase extends AbstractTestNGCucumberTests{
 
     private static List<DriverFactory> webDriverThreadPool = Collections.synchronizedList(new ArrayList<DriverFactory>());
     private static ThreadLocal<DriverFactory> driverFactory;
@@ -32,10 +33,12 @@ public class DriverBase {
     }
 
     public static WebDriver getDriver() throws Exception {
+        if(driverFactory == null) instantiateDriverObject();
         return driverFactory.get().getDriver();
     }
 
     public static WebDriverWait getWait() throws Exception {
+        if(driverFactory == null) instantiateDriverObject();
         return driverFactory.get().getWait();
     }
 
