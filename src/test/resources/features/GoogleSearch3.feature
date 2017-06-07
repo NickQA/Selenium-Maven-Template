@@ -1,4 +1,4 @@
-Feature: Google search with porn
+Feature: Google search with something useful
 
   @SmokeTest
   Scenario Outline: user can search any keyword and get title
@@ -7,7 +7,8 @@ Feature: Google search with porn
     Then title should contains <Word>
 
     Examples:
-      | Word |
-      | music |
-      | lol   |
-      | youtube  |
+      | Word    |
+      | sun     |
+      | weather |
+      | apple   |
+      | java    |
