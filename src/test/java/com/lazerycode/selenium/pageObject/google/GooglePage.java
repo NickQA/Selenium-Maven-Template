@@ -20,11 +20,7 @@ public class GooglePage extends BasePage<GoogleMap, GoogleValidator> {
     }
 
     public GooglePage waitUntilResultsLoaded(final String query) {
-        getMap().wait.until(new ExpectedCondition<Boolean>() {
-            public Boolean apply(WebDriver d) {
-                return d.getTitle().toLowerCase().startsWith(query.toLowerCase());
-            }
-        });
+        getMap().wait.until(d -> d.getTitle().toLowerCase().startsWith(query.toLowerCase()));
         return this;
     }
 }
