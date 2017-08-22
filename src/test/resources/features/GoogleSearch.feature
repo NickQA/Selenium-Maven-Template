@@ -1,6 +1,5 @@
-Feature: Google search with something useful
+Feature: Google 1
 
-  @SmokeTest
   Scenario Outline: user can search any keyword and get title
     Given an open browser with google.com
     When a keyword <Word> is entered in input field and submit button is clicked
