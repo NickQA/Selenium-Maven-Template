@@ -21,14 +21,16 @@ public class DriverFactory {
     private DriverType selectedDriverType;
 
     private final DriverType defaultDriverType = FIREFOX;
-    private final String browser = System.getProperty("browser", defaultDriverType.toString()).toUpperCase();
-    private final String operatingSystem = System.getProperty("os.name").toUpperCase();
-    private final String systemArchitecture = System.getProperty("os.arch");
-    private final boolean useRemoteWebDriver = Boolean.getBoolean("remoteDriver");
+    public final String browser = System.getProperty("browser", defaultDriverType.toString()).toUpperCase();
+    public final String operatingSystem = System.getProperty("os.name").toUpperCase();
+    public final String systemArchitecture = System.getProperty("os.arch");
+    public final boolean useRemoteWebDriver = Boolean.getBoolean("remoteDriver");
     private final boolean proxyEnabled = Boolean.getBoolean("proxyEnabled");
     private final String proxyHostname = System.getProperty("proxyHost");
     private final Integer proxyPort = Integer.getInteger("proxyPort");
-    private final String proxyDetails = String.format("%s:%d", proxyHostname, proxyPort);
+    public final String desiredGridParams = System.getProperty("desiredGridParams");
+
+    public final String proxyDetails = String.format("%s:%d", proxyHostname, proxyPort);
 
     public WebDriver getDriver() throws Exception {
         if (null == webdriver) {
@@ -83,6 +85,12 @@ public class DriverFactory {
             URL seleniumGridURL = new URL(System.getProperty("gridURL"));
             String desiredBrowserVersion = System.getProperty("desiredBrowserVersion");
             String desiredPlatform = System.getProperty("desiredPlatform");
+
+            String[] array = desiredGridParams.split(",");
+            for(String a : array){
+                String[] values = a.split(":");
+                desiredCapabilities.setCapability(values[0], values[1]);
+            }
 
             if (null != desiredPlatform && !desiredPlatform.isEmpty()) {
                 desiredCapabilities.setPlatform(Platform.valueOf(desiredPlatform.toUpperCase()));

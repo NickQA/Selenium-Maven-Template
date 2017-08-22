@@ -20,6 +20,7 @@ public class BasePage<TMap extends BasePageMap, TVal extends BasePageValidator<T
     private TMap map;
     private TVal val;
 
+
     public void navigate() {
         getMap().driver.navigate().to(baseUrl);
     }

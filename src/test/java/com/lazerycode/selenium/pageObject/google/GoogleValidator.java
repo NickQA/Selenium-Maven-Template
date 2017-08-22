@@ -9,8 +9,4 @@ public class GoogleValidator extends BasePageValidator<GoogleMap> {
     public GoogleValidator() {
         super(new GoogleMap());
     }
-
-
-
-
 }

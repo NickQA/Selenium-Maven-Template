@@ -1,4 +1,4 @@
-Feature: Google search with something again
+Feature: Google 3
 
   @SmokeTest
   Scenario Outline: user can search any keyword and get title

@@ -60,15 +60,22 @@
         <browser>Chrome</browser>
         <threads>1</threads>
         <remote>false</remote>
-        <seleniumGridURL/>
+        <seleniumGridURL></seleniumGridURL>
         <platform/>
         <browserVersion/>
+        <gridParams>browser:safari,browser_version:9.1,os:OS X,os_version:El Capitan,resolution:1920x1080</gridParams>
         <proxyEnabled>false</proxyEnabled>
         <proxyHost/>
         <proxyPort/>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-testng</artifactId>
+            <version>2.0-BETA14</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>ru.yandex.qatools.allure</groupId>
             <artifactId>allure-cucumber-jvm-adaptor</artifactId>
@@ -125,6 +132,12 @@
             <version>${testng.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.25</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <!--<profiles>-->
@@ -172,13 +185,11 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.19.1</version>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven-failsafe-plugin.version}</version>
                 <configuration>
-                    <testFailureIgnore>false</testFailureIgnore>
                     <argLine>
                         -javaagent:${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar
                         -Dcucumber.options="--plugin ru.yandex.qatools.allure.cucumberjvm.AllureReporter"
@@ -192,41 +203,7 @@
                         <gridURL>${seleniumGridURL}</gridURL>
                         <desiredPlatform>${platform}</desiredPlatform>
                         <desiredBrowserVersion>${browserVersion}</desiredBrowserVersion>
-                        <proxyEnabled>${proxyEnabled}</proxyEnabled>
-                        <proxyHost>${proxyHost}</proxyHost>
-                        <proxyPort>${proxyPort}</proxyPort>
-                        <phantomjs.binary.path>${phantomjs.binary.path}</phantomjs.binary.path>
-                        <webdriver.chrome.driver>${webdriver.chrome.driver}</webdriver.chrome.driver>
-                        <webdriver.ie.driver>${webdriver.ie.driver}</webdriver.ie.driver>
-                        <webdriver.opera.driver>${webdriver.opera.driver}</webdriver.opera.driver>
-                        <webdriver.gecko.driver>${webdriver.gecko.driver}</webdriver.gecko.driver>
-                        <webdriver.edge.driver>${webdriver.edge.driver}</webdriver.edge.driver>
-                    </systemPropertyVariables>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.aspectj</groupId>
-                        <artifactId>aspectjweaver</artifactId>
-                        <version>${aspectj.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>${maven-failsafe-plugin.version}</version>
-                <configuration>
-                    <parallel>methods</parallel>
-                    <threadCount>${threads}</threadCount>
-                    <systemPropertyVariables>
-                        <browser>${browser}</browser>
-                        <screenshotDirectory>${project.build.directory}/screenshots</screenshotDirectory>
-                        <remoteDriver>${remote}</remoteDriver>
-                        <gridURL>${seleniumGridURL}</gridURL>
-                        <desiredPlatform>${platform}</desiredPlatform>
-                        <desiredBrowserVersion>${browserVersion}</desiredBrowserVersion>
+                        <desiredGridParams>${gridParams}</desiredGridParams>
                         <proxyEnabled>${proxyEnabled}</proxyEnabled>
                         <proxyHost>${proxyHost}</proxyHost>
                         <proxyPort>${proxyPort}</proxyPort>
@@ -248,57 +225,64 @@
                         </goals>
                     </execution>
                 </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjweaver</artifactId>
+                        <version>${aspectj.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
-            <plugin>
-                <groupId>com.github.temyers</groupId>
-                <artifactId>cucumber-jvm-parallel-plugin</artifactId>
-                <version>4.2.0</version>
-                <executions>
-                    <execution>
-                        <id>generateRunners</id>
-                        <phase>generate-test-sources</phase>
-                        <goals>
-                            <goal>generateRunners</goal>
-                        </goals>
-                        <configuration>
-                            <glue>com.lazerycode.selenium.stepDef</glue>
-                            <outputDirectory>${project.build.directory}/generated-test-sources/cucumber
-                            </outputDirectory>
-                            <featuresDirectory>src/test/resources/features/</featuresDirectory>
-                            <cucumberOutputDir>target/cucumber-parallel</cucumberOutputDir>
-                            <plugins>
-                                <plugin>
-                                    <name>json</name>
-                                </plugin>
-                            </plugins>
-                            <!--<strict>true</strict>-->
-                            <monochrome>false</monochrome>
-                            <!-- The tags to run, maps to CucumberOptions.tags property -->
-                            <!--<tags>"@SmokeTest"</tags>-->
-                            <namingScheme>simple</namingScheme>
-                            <namingPattern>Parallel{c}IT</namingPattern>
-                            <parallelScheme>SCENARIO</parallelScheme>
-                            <!--<filterFeaturesByTags>false</filterFeaturesByTags>-->
-                            <useTestNG>true</useTestNG>
+            <!--<plugin>-->
+                <!--<groupId>com.github.temyers</groupId>-->
+                <!--<artifactId>cucumber-jvm-parallel-plugin</artifactId>-->
+                <!--<version>4.2.0</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>generateRunners</id>-->
+                        <!--<phase>generate-test-sources</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>generateRunners</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<glue>com.lazerycode.selenium.stepDef</glue>-->
+                            <!--<outputDirectory>${project.build.directory}/generated-test-sources/cucumber-->
+                            <!--</outputDirectory>-->
+                            <!--<featuresDirectory>src/test/resources/features/</featuresDirectory>-->
+                            <!--<cucumberOutputDir>target/cucumber-parallel</cucumberOutputDir>-->
+                            <!--<plugins>-->
+                                <!--<plugin>-->
+                                    <!--<name>json</name>-->
+                                <!--</plugin>-->
+                            <!--</plugins>-->
+                            <!--&lt;!&ndash;<strict>true</strict>&ndash;&gt;-->
+                            <!--<monochrome>false</monochrome>-->
+                            <!--&lt;!&ndash; The tags to run, maps to CucumberOptions.tags property &ndash;&gt;-->
+                            <!--&lt;!&ndash;<tags>"@SmokeTest"</tags>&ndash;&gt;-->
+                            <!--<namingScheme>simple</namingScheme>-->
+                            <!--<namingPattern>Parallel{c}IT</namingPattern>-->
+                            <!--<parallelScheme>SCENARIO</parallelScheme>-->
+                            <!--&lt;!&ndash;<filterFeaturesByTags>false</filterFeaturesByTags>&ndash;&gt;-->
+                            <!--<useTestNG>true</useTestNG>-->
 
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+                        <!--</configuration>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
 
         </plugins>
     </build>
     <!--</profile>-->
     <!--</profiles>-->
 
-    <reporting>
-        <excludeDefaults>true</excludeDefaults>
-        <plugins>
-            <plugin>
-                <groupId>io.qameta.allure</groupId>
-                <artifactId>allure-maven</artifactId>
-                <version>2.8</version>
-            </plugin>
-        </plugins>
-    </reporting>
+    <!--<reporting>-->
+        <!--<excludeDefaults>true</excludeDefaults>-->
+        <!--<plugins>-->
+            <!--<plugin>-->
+                <!--<groupId>io.qameta.allure</groupId>-->
+                <!--<artifactId>allure-maven</artifactId>-->
+                <!--<version>2.8</version>-->
+            <!--</plugin>-->
+        <!--</plugins>-->
+    <!--</reporting>-->
 </project>

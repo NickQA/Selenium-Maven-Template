@@ -10,6 +10,10 @@ import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Listeners;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,8 +24,12 @@ public class DriverBase extends AbstractTestNGCucumberTests{
     private static List<DriverFactory> webDriverThreadPool = Collections.synchronizedList(new ArrayList<DriverFactory>());
     private static ThreadLocal<DriverFactory> driverFactory;
 
-    @BeforeSuite(alwaysRun = true)
+
+
+    @BeforeSuite(alwaysRun = true, description = "Initializing WebDriver pool")
     public static void instantiateDriverObject() {
+
+
         driverFactory = new ThreadLocal<DriverFactory>() {
             @Override
             protected DriverFactory initialValue() {
@@ -42,15 +50,34 @@ public class DriverBase extends AbstractTestNGCucumberTests{
         return driverFactory.get().getWait();
     }
 
-    @AfterMethod(alwaysRun = true)
+    @AfterMethod(alwaysRun = true, description = "Clearing cookies")
     public static void clearCookies() throws Exception {
         getDriver().manage().deleteAllCookies();
     }
 
-    @AfterSuite(alwaysRun = true)
+    @AfterSuite(alwaysRun = true, description = "Killing WebDriver instances")
     public static void closeDriverObjects() {
         for (DriverFactory driverFactory : webDriverThreadPool) {
             driverFactory.quitDriver();
+        }
+    }
+
+    private static void saveEnvVars(){
+        if(webDriverThreadPool.size() > 0){
+            DriverFactory driverFactory = webDriverThreadPool.get(0);
+            StringBuilder sb = new StringBuilder();
+            sb.append("Browser=").append(driverFactory.browser).append("\n");
+            sb.append("OS=").append(driverFactory.operatingSystem).append("\n");
+            sb.append("System=").append(driverFactory.systemArchitecture).append("\n");
+            sb.append("IsRemote=").append(driverFactory.useRemoteWebDriver).append("\n");
+            sb.append("GridParams=").append(driverFactory.desiredGridParams).append("\n");
+            PrintWriter out = null;
+            try {
+                out = new PrintWriter("target\\allure-results\\environment.properties");
+                out.write(sb.toString());
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
