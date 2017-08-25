@@ -5,10 +5,7 @@ import com.lazerycode.selenium.listeners.ScreenshotListener;
 import cucumber.api.testng.AbstractTestNGCucumberTests;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.Listeners;
+import org.testng.annotations.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,8 +25,7 @@ public class DriverBase extends AbstractTestNGCucumberTests{
 
     @BeforeSuite(alwaysRun = true, description = "Initializing WebDriver pool")
     public static void instantiateDriverObject() {
-
-
+        System.out.println("instantiateDriverObject");
         driverFactory = new ThreadLocal<DriverFactory>() {
             @Override
             protected DriverFactory initialValue() {
@@ -52,14 +48,17 @@ public class DriverBase extends AbstractTestNGCucumberTests{
 
     @AfterMethod(alwaysRun = true, description = "Clearing cookies")
     public static void clearCookies() throws Exception {
+        System.out.println("deleteAllCookies");
         getDriver().manage().deleteAllCookies();
     }
 
     @AfterSuite(alwaysRun = true, description = "Killing WebDriver instances")
     public static void closeDriverObjects() {
+        System.out.println("closeDriverObjects");
         for (DriverFactory driverFactory : webDriverThreadPool) {
             driverFactory.quitDriver();
         }
+        saveEnvVars();
     }
 
     private static void saveEnvVars(){

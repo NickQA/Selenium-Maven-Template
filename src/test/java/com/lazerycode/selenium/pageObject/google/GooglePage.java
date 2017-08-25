@@ -19,6 +19,7 @@ public class GooglePage extends BasePage<GoogleMap, GoogleValidator> {
         searchField.sendKeys(query);
         searchField.submit();
         return this;
+
     }
 
     @Step("Waiting until title contains {query}")

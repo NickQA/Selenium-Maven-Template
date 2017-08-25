@@ -1,4 +1,4 @@
-@en
+@DebugTag
 Feature: Test allure English
 
 

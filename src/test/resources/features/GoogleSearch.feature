@@ -1,5 +1,6 @@
 Feature: Google 1
 
+  @GoogleTest1
   Scenario Outline: user can search any keyword and get title
     Given an open browser with google.com
     When a keyword <Word> is entered in input field and submit button is clicked
